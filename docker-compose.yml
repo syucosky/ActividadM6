@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  # Servicio de la base de datos MySQL
+  mysql-db:
+    container_name: todolist_db
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: actividadm5
+    volumes:
+      - ./data:/var/lib/mysql
+  # Servicio de la aplicación Spring Boot
+  java_app:
+    container_name: java_app
+    image: seba/todolist:1.0.0
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - DATABASE_URL=jdbc:mysql://mysql-db:3306/actividadm5?createDataBaseIfNotExist=true
+      - DATABASE_USERNAME=root
+      - DATABASE_PASSWORD=root
+    depends_on:
+      - mysql-db
+
+volumes:
+  mysql-data:
